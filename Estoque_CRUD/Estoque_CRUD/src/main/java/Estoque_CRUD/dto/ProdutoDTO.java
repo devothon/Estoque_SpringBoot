@@ -5,6 +5,6 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 //Classe DTO para filtrar dados
-public record ProdutoDTO(@NotBlank String nome, @NotNull double preco) {
+public record ProdutoDTO(@NotBlank String name, @NotNull double preco) {
 
 }

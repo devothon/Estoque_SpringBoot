@@ -30,6 +30,7 @@ public class ProdutoController {
         {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
+        ResponseEntity.status(HttpStatus.OK).body(produto);
         return ResponseEntity.status(HttpStatus.OK).body(produto);
     }
 
@@ -47,30 +48,30 @@ public class ProdutoController {
 
     @PostMapping("/criar")
     @ApiResponse(responseCode = "201",description = "Cria o produto")
-    public  ResponseEntity<ProdutoModel> criar(@RequestBody @Valid ProdutoDTO produtoDTO){
+    public ResponseEntity<Object> criar(@RequestBody @Valid ProdutoDTO produtoDTO){
         var Produto = new ProdutoModel();
         BeanUtils.copyProperties(produtoDTO,Produto);
-        return  ResponseEntity.status(HttpStatus.CREATED).body(Produto);
+        this.produto.save(Produto);
+        return ResponseEntity.status(HttpStatus.CREATED).body("Produto criado");
     }
 
     @PutMapping("/atualizar/{id}")
     @ApiResponse(responseCode = "200",description = "Atualiza o produto")
     @ApiResponse(responseCode = "404", description = "quando não econtrado o ID")
-    public ResponseEntity<Object> atualizarId(@PathVariable Long id,@RequestBody ProdutoDTO Prod){
+    public ResponseEntity<Object> atualizarId(@PathVariable Long id,@RequestBody @Valid ProdutoDTO Prod){
 
         Optional<ProdutoModel>produto=this.produto.findById(id);
         if(produto.isEmpty())
         {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto não encontrado");
         }
-        BeanUtils.copyProperties(Prod,produto);
         var ProdAtualizado=produto.get();
+        BeanUtils.copyProperties(Prod,ProdAtualizado);
         this.produto.save(ProdAtualizado);
-        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Produto atualizado");
-
+        return ResponseEntity.status(HttpStatus.OK).body("Produto atualizado ");
     }
 
-    @DeleteMapping("/Deletar/{id}")
+    @DeleteMapping("/deletar/{id}")
     @ApiResponse(responseCode = "200",description = "Deleta o produto")
     @ApiResponse(responseCode = "404", description = "quando não econtrado o ID")
     public ResponseEntity<Object> deletarID(@PathVariable Long id){
@@ -85,6 +86,7 @@ public class ProdutoController {
         return ResponseEntity.status(HttpStatus.OK).body("Produto deletado");
     }
 
+    @DeleteMapping("/deletar")
     @ApiResponse(responseCode = "200",description = "Deleta todos os produtos")
     public ResponseEntity<Object> deletarTodos()
     {
