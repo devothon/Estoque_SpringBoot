@@ -10,7 +10,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 import java.util.Optional;
 
@@ -24,13 +23,12 @@ public class ProdutoController {
     @ApiResponse(responseCode = "200",description = "Retorna o produto")
     @ApiResponse(responseCode = "404", description = "quando a lista esta vazia")
     @GetMapping("/listar")
-    public ResponseEntity<List<ProdutoModel>> listar(){
+    public ResponseEntity<Object> listar(){
         List<ProdutoModel> produto=this.produto.findAll();
         if(produto.isEmpty())
         {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Lista vazia");
         }
-        ResponseEntity.status(HttpStatus.OK).body(produto);
         return ResponseEntity.status(HttpStatus.OK).body(produto);
     }
 
@@ -48,6 +46,7 @@ public class ProdutoController {
 
     @PostMapping("/criar")
     @ApiResponse(responseCode = "201",description = "Cria o produto")
+    @ApiResponse(responseCode = "400",description = "Quando um dos campo e nulo")
     public ResponseEntity<Object> criar(@RequestBody @Valid ProdutoDTO produtoDTO){
         var Produto = new ProdutoModel();
         BeanUtils.copyProperties(produtoDTO,Produto);
