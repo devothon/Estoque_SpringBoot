@@ -12,7 +12,7 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProdutoModel {
+public class Produto {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
